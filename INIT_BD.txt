@@ -1,0 +1,106 @@
+# Impostazione del Database
+
+mysql -u <username> -p
+
+#Inserite la password richiesta ed una volta entrati, eseguite il seguente comando per creare il database:
+
+CREATE DATABASE BucketList;
+
+#CREARE LA TABELLA
+
+CREATE TABLE `BucketList`.`tbl_user` (
+  `user_id` BIGINT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(45) NULL,
+  `user_username` VARCHAR(45) NULL,
+  `user_password` VARCHAR(45) NULL,
+  PRIMARY KEY (`user_id`));
+
+
+#STORE PROCEDURE a cosa serve ? 
+Per la nostra applicazione Python utilizzeremo una Stored Procedure per interfacciarci con il database MySQL.  Cosi, una volta creata la tabella tbl_user, create una stored procedure 
+chiamata sp_createUser per registrare un utente.
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createUser`(
+    IN p_name VARCHAR(20),
+  IN p_username VARCHAR(20),
+	IN p_password VARCHAR(20)
+)
+BEGIN
+	if ( select exists (select 1 from tbl_user where user_username = p_username) ) THEN
+	
+		select 'Username Exists !!';
+	
+	ELSE
+	
+		insert into tbl_user
+		(
+			user_name,
+			user_username,
+			user_password
+		)
+		values
+		(
+			p_name,
+			p_username,
+			p_password
+		);
+	
+	END IF;
+END$$
+DELIMITER ;
+
+#interfaccia di registrazione
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Python Flask Bucket List App</title>
+   
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/signup.css" rel="stylesheet">
+   
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" ><a href="main">Home</a></li>
+            <li role="presentation"><a href="#">Sign In</a></li>
+            <li role="presentation" class="active"><a href="#">Sign Up</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Python Flask App</h3>
+      </div>
+      <div class="jumbotron">
+        <h1>Bucket List App</h1>
+        <form class="form-signin">
+        <label for="inputName" class="sr-only">Name</label>
+        <input type="name" name="inputName" id="inputName" class="form-control" placeholder="Name" required autofocus>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>
+        
+        <button id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Sign up</button>
+      </form>
+      </div>
+      
+      <footer class="footer">
+        <p>&copy; Company 2015</p>
+      </footer>
+    </div>
+  </body>
+</html>
+
+
+
+#visualizzare la pagina di registrazione una volta ricevuta la richiesta /showSignUp
+
+@app.route('/showSignUp')
+def showSignUp():
+    return render_template('signup.html')
+
+
