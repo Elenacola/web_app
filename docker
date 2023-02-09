@@ -18,3 +18,21 @@ ENV FLASK_APP=app.py
 
 # Run the command to start the Dash app
 CMD ["flask", "run", "--host=0.0.0.0"]
+
+
+________________________________________________________________
+
+commenti utili x memo: 
+
+Il file Dockerfile va inserito nella cartella principale della tua applicazione, dove sono presenti tutti i file necessari per eseguire l'applicazione, come i codici sorgente, le librerie e i file di configurazione.
+
+Per creare un'immagine Docker a partire dal tuo file Dockerfile, 
+puoi eseguire il seguente comando nella cartella che contiene il file Dockerfile:
+
+docker build -t <nome_immagine> .
+
+Dopo aver creato l'immagine, puoi eseguire un contenitore Docker a partire da questa immagine 
+utilizzando il seguente comando:
+
+docker run -p 8080:8050 <nome_immagine>
+
