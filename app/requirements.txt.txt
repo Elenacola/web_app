@@ -1,0 +1,4 @@
+dash==1.14.0
+dash-renderer==1.6.0
+Flask==1.1.4
+flask-compress==1.13
